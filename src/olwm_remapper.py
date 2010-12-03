@@ -5,7 +5,6 @@ __author__="bmillett"
 __date__ ="$Dec 2, 2010 6:24:03 PM$"
 
 
-from mymath import rational
 import sys
 import os.path
 import re
