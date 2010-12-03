@@ -1,0 +1,6 @@
+This is a python module that is will not be useful to anyone but me right now. You could fork it for your own purposes by removing the "summary" check.
+
+Essentially it just takes a site_map.xml file (I genererated them from the mac application called Integrity) and parses it and compares it against another one to build a 301 redirect apache config.
+
+The way I use it is when I do a new site design for a client. In order to save them broken links, before I cutover to the new site, I grab a sitemap of their old website (easy with Integrity) and then after the custover I get the new site_map.xml. This script compares the URLs, approximates an old URI to a new existing one and then renders the apache code for a 301 (permanent redirect.)
+ 
