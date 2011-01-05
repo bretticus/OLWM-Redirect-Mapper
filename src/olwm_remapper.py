@@ -12,8 +12,9 @@ import difflib
 
 from xml.dom import minidom
 from urlparse import urlparse
+from optparse import OptionParser
 
-def make_conf(source,match):
+def make_conf(source,match,default=None):
     doc_s=parse_xml_file(source)
     old_urls = doc_s.getElementsByTagName("url")
 
@@ -33,6 +34,8 @@ def make_conf(source,match):
         old_url = s.childNodes[1].firstChild.data
         
         if 'summary' in old_url:
+            if default is not None:
+                results[old_url] = default
             continue
 
         old_uri_string = get_distilled_uri_string(old_url)
@@ -51,6 +54,9 @@ def make_conf(source,match):
 
             if results[old_url] == 0:
                 results[old_url] = False
+
+        if default is not None and results[old_url] is not False:
+            results[old_url] = default
 
     for key in results:
         if results[key] != False:
@@ -82,4 +88,12 @@ def parse_xml_file(path):
 
 
 if __name__ == "__main__":
-    make_conf(sys.argv[1], sys.argv[2])
+    parser = OptionParser()
+    parser.add_option("-o", "--old", dest="source",
+                      help="Original sitemap file", metavar="FILE")
+    parser.add_option("-n", "--new", dest="match",
+                      help="New sitemap file to match against", metavar="FILE")
+    parser.add_option("-d", "--default", dest="default", default=None,
+                  help="Default URL for old URLs that don't match.")
+    (options, args) = parser.parse_args()
+    make_conf(options.source, options.match, options.default)
