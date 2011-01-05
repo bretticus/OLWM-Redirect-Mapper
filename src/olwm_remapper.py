@@ -34,13 +34,13 @@ def make_conf(source,match,default=None):
         old_url = s.childNodes[1].firstChild.data
         
         if 'summary' in old_url:
-            if default is not None:
-                results[old_url] = default
+            if default != None:
+                results[old_url] = False
             continue
 
         old_uri_string = get_distilled_uri_string(old_url)
 
-        results[old_url] = 0
+        results[old_url] = None
 
         for new_url in new_urls_dict:
 
@@ -52,15 +52,16 @@ def make_conf(source,match,default=None):
                 #print "compared %s to %s: %.4f" % (old_uri_string, new_urls_dict[new_url], s.ratio())
                 results[old_url] = new_url
 
-            if results[old_url] == 0:
+            if results[old_url] is None:
                 results[old_url] = False
-
-        if default is not None and results[old_url] is not False:
-            results[old_url] = default
+            
 
     for key in results:
         if results[key] != False:
             print "Redirect 301 %s %s" % (get_url_path(key), results[key])
+        elif default != None:
+            print "Redirect 301 %s %s" % (get_url_path(key), default)
+
 
 def get_distilled_uri_string(url_string):
     #get the uri part
